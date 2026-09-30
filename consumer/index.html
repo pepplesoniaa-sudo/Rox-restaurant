@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Rox Restaurants</title>
+    <meta name="description" content="Restaurants in Port Harcourt, loaded live from the Rox Restaurant API." />
+    <style>
+      :root {
+        --bg: #f7f5f2;
+        --card: #ffffff;
+        --text: #1f1d1a;
+        --muted: #6b665f;
+        --accent: #0a7d55;
+        --danger: #b3261e;
+        --border: #e4dfd8;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #171614;
+          --card: #22201d;
+          --text: #f1ede7;
+          --muted: #a8a197;
+          --accent: #4fc79a;
+          --danger: #ff8a80;
+          --border: #37332e;
+        }
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font: 16px/1.5 system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      }
+      main { max-width: 720px; margin: 0 auto; padding: 24px 16px 48px; }
+      h1 { margin: 0 0 4px; font-size: 1.6rem; }
+      .muted { color: var(--muted); margin: 0; }
+      .controls { display: flex; gap: 12px; align-items: end; flex-wrap: wrap; margin: 20px 0 8px; }
+      label { display: grid; gap: 4px; font-weight: 600; font-size: 0.9rem; }
+      select, button {
+        font: inherit;
+        padding: 8px 12px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: var(--card);
+        color: var(--text);
+      }
+      button { cursor: pointer; }
+      button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+      button:disabled, select:disabled { opacity: 0.5; cursor: not-allowed; }
+      .status { min-height: 1.5em; margin: 12px 0; }
+      .status.loading { color: var(--muted); }
+      .status.empty { color: var(--muted); font-style: italic; }
+      .status.error { color: var(--danger); font-weight: 600; }
+      #list { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+      .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+      .card h2 { font-size: 1.1rem; margin: 0 0 4px; }
+      .card p { margin: 2px 0 0; }
+      .badge { font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 999px; vertical-align: middle; }
+      .badge.open { background: color-mix(in srgb, var(--accent) 18%, transparent); color: var(--accent); }
+      .badge.closed { background: color-mix(in srgb, var(--muted) 18%, transparent); color: var(--muted); }
+      .pager { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-top: 16px; }
+      #summary { color: var(--muted); font-size: 0.9rem; }
+      footer { margin-top: 32px; font-size: 0.85rem; color: var(--muted); word-break: break-all; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Rox Restaurants</h1>
+      <p class="muted">Food delivery in Port Harcourt, loaded live from the public API.</p>
+
+      <div class="controls">
+        <label>
+          Area
+          <select id="area">
+            <option value="">All areas</option>
+          </select>
+        </label>
+        <button id="retry" type="button" hidden>Try again</button>
+      </div>
+
+      <!-- aria-live: screen readers announce loading, empty and error messages -->
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+
+      <ul id="list"></ul>
+
+      <div class="pager">
+        <button id="first" type="button" hidden>← First page</button>
+        <button id="next" type="button" class="primary" disabled>Next page →</button>
+        <span id="summary"></span>
+      </div>
+
+      <footer>Data from <code id="api-url"></code></footer>
+    </main>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

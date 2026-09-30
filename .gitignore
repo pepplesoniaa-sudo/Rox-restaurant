@@ -1,0 +1,15 @@
+# Secrets: real values live only on your machine and in the host's dashboard
+.env
+.env.*
+!.env.example
+
+# Dependencies and build output (reproducible from package.json)
+node_modules/
+dist/
+
+# Prisma client generated from prisma/schema.prisma
+src/generated/
+
+# Test and tool output
+coverage/
+*.log

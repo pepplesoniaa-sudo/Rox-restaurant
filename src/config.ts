@@ -21,7 +21,13 @@ const envSchema = z
     NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
     PORT: z.coerce.number().int().min(1).max(65535).default(3000),
 
-    DATABASE_URL: z.url({ error: 'DATABASE_URL must be a postgresql:// connection string' }),
+    // Must start with postgresql:// (or postgres://). The message never echoes
+    // the value, because it contains the database password.
+    DATABASE_URL: z
+      .string({ error: 'is required' })
+      .regex(/^postgres(ql)?:\/\/\S+$/, {
+        error: 'must start with postgresql:// and contain no quotes or spaces (was a "psql" command or quotes pasted?)',
+      }),
 
     PAGINATION_DEFAULT_LIMIT: z.coerce.number().int().positive().default(20),
     PAGINATION_MAX_LIMIT: z.coerce.number().int().positive().default(100),

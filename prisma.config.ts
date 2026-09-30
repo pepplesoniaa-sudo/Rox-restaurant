@@ -14,7 +14,19 @@ try {
 // which a transaction-mode pooler (Neon's PgBouncer) cannot hold. When
 // DIRECT_DATABASE_URL is set (production) the CLI uses it; locally there
 // is no pooler, so DATABASE_URL alone is enough.
-const databaseUrl = process.env.DIRECT_DATABASE_URL ?? process.env.DATABASE_URL;
+const urlVariable = process.env.DIRECT_DATABASE_URL ? 'DIRECT_DATABASE_URL' : 'DATABASE_URL';
+const databaseUrl = process.env[urlVariable];
+
+// Catch the common copy-paste mistakes (quotes, a leading "psql '", the
+// variable name, a space) with a message that names the variable, instead
+// of Prisma's generic "scheme is not recognized". Never print the value
+// itself: it contains the database password.
+if (databaseUrl && !/^postgres(ql)?:\/\//.test(databaseUrl)) {
+  throw new Error(
+    `${urlVariable} must start with postgresql:// . Check it has no quotes, no leading "psql '", ` +
+      `no "${urlVariable}=" prefix and no spaces (value starts with "${databaseUrl.slice(0, 6)}...").`,
+  );
+}
 
 export default defineConfig({
   schema: 'prisma/schema.prisma',

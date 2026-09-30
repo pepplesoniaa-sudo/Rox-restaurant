@@ -1,0 +1,44 @@
+{
+  "name": "rox-restaurant-api",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Versioned REST API for a Nigerian food-delivery market: restaurants, menu items, customers and orders.",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit && tsc --noEmit -p tests",
+    "dev": "tsx watch --env-file-if-exists=.env src/server.ts",
+    "build": "prisma generate && tsc",
+    "start": "node --env-file-if-exists=.env dist/server.js",
+    "postinstall": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "db:status": "prisma migrate status",
+    "db:seed": "tsx --env-file-if-exists=.env scripts/seed.ts",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@types/cors": "2.8.19",
+    "@types/express": "5.0.6",
+    "@types/node": "24.19.0",
+    "@types/pg": "8.23.1",
+    "@types/supertest": "7.2.1",
+    "pg": "8.23.0",
+    "prisma": "7.10.0",
+    "supertest": "7.3.0",
+    "tsx": "4.23.15",
+    "typescript": "7.0.2",
+    "vitest": "5.0.2"
+  },
+  "dependencies": {
+    "@faker-js/faker": "10.6.0",
+    "@prisma/adapter-pg": "7.10.0",
+    "@prisma/client": "7.10.0",
+    "cors": "2.8.6",
+    "express": "5.2.1",
+    "express-rate-limit": "8.7.0",
+    "zod": "4.6.5"
+  }
+}

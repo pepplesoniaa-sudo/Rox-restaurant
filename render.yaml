@@ -1,0 +1,38 @@
+# Render Blueprint: describes the web service so it can be created from this
+# file (Render dashboard → New → Blueprint → pick this repository).
+# Secrets are NOT in this file: "sync: false" makes Render ask for them once
+# in the dashboard, so they never enter git.
+services:
+  - type: web
+    name: rox-restaurant-api
+    runtime: node
+    plan: free
+    region: frankfurt
+    # --include=dev: NODE_ENV=production would otherwise make npm skip
+    # devDependencies, and the build needs typescript and the prisma CLI.
+    buildCommand: npm ci --include=dev && npm run build
+    # Apply any pending migrations, then start. migrate deploy only runs
+    # migrations not yet applied, so running it on every start is safe.
+    startCommand: npm run db:deploy && npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: "24"
+      - key: DATABASE_URL # Neon pooled connection string
+        sync: false
+      - key: DIRECT_DATABASE_URL # Neon direct connection string (migrations)
+        sync: false
+      - key: CORS_ALLOWED_ORIGINS # the consumer origin, e.g. https://YOUR-CONSUMER.netlify.app
+        sync: false
+      - key: TRUST_PROXY_HOPS
+        value: "1"
+      - key: RATE_LIMIT_WINDOW_MS
+        value: "60000"
+      - key: RATE_LIMIT_MAX_REQUESTS
+        value: "100"
+      - key: PAGINATION_DEFAULT_LIMIT
+        value: "20"
+      - key: PAGINATION_MAX_LIMIT
+        value: "100"

@@ -1,0 +1,5 @@
+# Netlify: publish the consumer folder as a static site. There is no build
+# step: it is plain HTML and JavaScript.
+[build]
+  publish = "consumer"
+  command = ""
